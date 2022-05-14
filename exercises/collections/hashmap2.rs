@@ -12,7 +12,6 @@
 // Execute the command `rustlings hint hashmap2` if you need
 // hints.
 
-// I AM NOT DONE
 
 use std::collections::HashMap;
 
@@ -26,7 +25,9 @@ enum Fruit {
 }
 
 fn fruit_basket(basket: &mut HashMap<Fruit, u32>) {
-    let fruit_kinds = vec![
+    // given a size requirement much greater than 11, fill the basket with missing fruit
+    const SIZE_REQUIREMENT: u32 = 20; //11;
+    const FRUIT_KINDS: [Fruit; 5] = [
         Fruit::Apple,
         Fruit::Banana,
         Fruit::Mango,
@@ -34,10 +35,29 @@ fn fruit_basket(basket: &mut HashMap<Fruit, u32>) {
         Fruit::Pineapple,
     ];
 
-    for fruit in fruit_kinds {
+    let mut needed_fruit_quantity: u32 = SIZE_REQUIREMENT - basket.values().sum::<u32>();
+    if needed_fruit_quantity <= 0 {
+        return;
+    }
+
+    let number_of_fruit_provided: u32 = basket.keys().len() as u32;
+    if number_of_fruit_provided >= (FRUIT_KINDS.len() as u32) {
+        return;
+    }
+    let desired_quantity_to_add_per_fruit = needed_fruit_quantity / number_of_fruit_provided;
+
+    // must total size requirement
+    // must add fruit that are missing
+    for fruit in FRUIT_KINDS {
         // TODO: Put new fruits if not already present. Note that you
         // are not allowed to put any type of fruit that's already
         // present!
+
+        // check if key is present?
+        if !basket.contains_key(&fruit) {
+            basket.insert(fruit, std::cmp::min(desired_quantity_to_add_per_fruit, needed_fruit_quantity) as u32);
+            needed_fruit_quantity -= desired_quantity_to_add_per_fruit;
+        }
     }
 }
 

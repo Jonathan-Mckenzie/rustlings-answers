@@ -7,12 +7,18 @@
 // Execute the command `rustlings hint vec2` if you need
 // hints.
 
-// I AM NOT DONE
 
 fn vec_loop(mut v: Vec<i32>) -> Vec<i32> {
     for i in v.iter_mut() {
         // TODO: Fill this up so that each element in the Vec `v` is
         // multiplied by 2.
+
+        /*
+        attempted: i *= 2, but it was obvious that "i" was not an i32, but a reference to an i32
+        naively created a new variable for holding the value of *i
+        this shorthand syntax seemed to work:
+         */
+        *i *= 2;
     }
 
     // At this point, `v` should be equal to [4, 8, 12, 16, 20].
