@@ -1,3 +1,5 @@
+use std::num::ParseIntError;
+
 // The From trait is used for value-to-value conversions.
 // If From is implemented correctly for a type, the Into trait should work conversely.
 // You can read more about it at https://doc.rust-lang.org/std/convert/trait.From.html
@@ -33,10 +35,24 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of Person
 // Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        let split: Vec<&str> = s.split(",").collect::<Vec<&str>>();
+        if split.len() != 2 {
+            return Person::default(); // invalid number of args
+        }
+        let age = match split[1].parse::<usize>() {
+            Ok(number) => number,
+            Err(e) => return Person::default(), // age is not a number
+        };
+        if age <= 0 { // invalid age
+            return Person::default();
+        }
+        if split[0].len() <= 0 { // empty name
+            return Person::default();
+        }
+        Person {name: split[0].to_string(), age }
     }
 }
 
@@ -125,6 +141,7 @@ mod tests {
 
     #[test]
     fn test_trailing_comma_and_some_string() {
+        // in my opinion, this should be a valid Person { Mike, 32 }
         let p: Person = Person::from("Mike,32,man");
         assert_eq!(p.name, "John");
         assert_eq!(p.age, 30);
